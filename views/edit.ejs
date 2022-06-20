@@ -1,0 +1,28 @@
+<%- include("./partials/header"); -%>
+<title>Edit Movies</title>
+
+<div class="content">
+  <h1 class="heading">Edit Movies</h1>
+  <p class="description">Edit Movie Rating</p>
+  <form method="post" action="/edit">
+    <input
+      type="text"
+      id="rating"
+      placeholder="your rating"
+      name="rating"
+      autofocus
+    />
+    <br /><br />
+    <input
+      type="text"
+      id="review"
+      placeholder="your review"
+      name="review"
+      autofocus
+    />
+    <br /><br />
+    <input class="btn btn-primary btn-md" value="Update" type="submit" />
+  </form>
+  <!-- {{ wtf.quick_form(form, novalidate=True) }} -->
+</div>
+<%- include("./partials/footer"); -%>
