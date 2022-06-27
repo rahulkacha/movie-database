@@ -3,24 +3,13 @@
 <div class="container">
   <h1 class="heading">Select Movie</h1>
 
+  <% list.forEach(movie => { %>
   <p>
-    <a href="#"> movie title - movie date</a>
+    <a href="/find/<%= movie.id %>">
+      <%= movie.title %> - <%= moment(movie.release_date).format("DD/MM/YYYY")%>
+    </a>
   </p>
-  <p>
-    <a href="#"> movie title - movie date</a>
-  </p>
-  <p>
-    <a href="#"> movie title - movie date</a>
-  </p>
-  <p>
-    <a href="#"> movie title - movie date</a>
-  </p>
-  <p>
-    <a href="#"> movie title - movie date</a>
-  </p>
-  <p>
-    <a href="#"> movie title - movie date</a>
-  </p>
+  <% }) %>
 </div>
 
 <%- include("./partials/footer"); -%>
