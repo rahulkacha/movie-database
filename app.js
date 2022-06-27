@@ -3,7 +3,6 @@ const ejs = require("ejs");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const https = require("https");
-const querystring = require("querystring");
 const app = express();
 const Movie = require("./database");
 const moment = require("moment");
@@ -13,7 +12,10 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect("mongodb://localhost:27017/movieDB");
+// mongoose.connect("mongodb://localhost:27017/movieDB");
+mongoose.connect(
+  `mongodb+srv://admin:${process.env.MONGODB_PASSWORD}@cluster0.6l7thvr.mongodb.net/?retryWrites=true&w=majority`
+);
 
 API_ENDPOINT = "https://api.themoviedb.org/3/search/movie?";
 API_KEY = process.env.API_KEY;
@@ -43,7 +45,7 @@ app.post("/add", (req, res) => {
       "api_key=" +
       API_KEY +
       "&query=" +
-      req.body.movie + 
+      req.body.movie +
       "&include_adult=true",
     (response) => {
       response
