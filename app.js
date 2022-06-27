@@ -12,7 +12,8 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// mongoose.connect("mongodb://localhost:27017/movieDB");
+const PORT = process.env.PORT || 5000;
+
 mongoose.connect(
   `mongodb+srv://admin:${process.env.MONGODB_PASSWORD}@cluster0.6l7thvr.mongodb.net/?retryWrites=true&w=majority`
 );
@@ -128,6 +129,6 @@ app.post("/delete/:title", (req, res) => {
   });
 });
 
-app.listen(5000, () => {
-  console.log("app listening on port 5000.");
+app.listen(PORT, () => {
+  console.log("app listening on port " + PORT + ".");
 });
