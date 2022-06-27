@@ -15,9 +15,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 5000;
 
 const DB_URL =
-  "mongodb+srv://admin:" +
+  "mongodb+srv://rahul-admin:" +
   process.env.MONGODB_PASSWORD +
-  "@cluster0.6l7thvr.mongodb.net/?retryWrites=true&w=majority";
+  "@cluster0.itvnp8i.mongodb.net/?retryWrites=true&w=majority";
 
 mongoose.connect(DB_URL);
 
