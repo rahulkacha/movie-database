@@ -14,9 +14,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 5000;
 
-mongoose.connect(
-  `mongodb+srv://admin:${process.env.MONGODB_PASSWORD}@cluster0.6l7thvr.mongodb.net/?retryWrites=true&w=majority`
-);
+const DB_URL =
+  "mongodb+srv://admin:" +
+  process.env.MONGODB_PASSWORD +
+  "@cluster0.6l7thvr.mongodb.net/?retryWrites=true&w=majority";
+
+mongoose.connect(DB_URL);
 
 API_ENDPOINT = "https://api.themoviedb.org/3/search/movie?";
 API_KEY = process.env.API_KEY;
