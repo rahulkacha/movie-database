@@ -2,7 +2,7 @@ const express = require("express");
 const ejs = require("ejs");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const https = require("https");
+const axios = require("axios");
 const app = express();
 const Movie = require("./database");
 const moment = require("moment");
@@ -24,13 +24,6 @@ mongoose.connect(DB_URL);
 API_ENDPOINT = "https://api.themoviedb.org/3/search/movie?";
 API_KEY = process.env.API_KEY;
 
-headers = {
-  "User-Agent":
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36",
-  "Accept-Encoding": "gzip, deflate",
-  Connection: "keep-alive",
-};
-
 // ROUTES
 app.get("/", (req, res) => {
   Movie.find({}, (err, movies) => {
@@ -44,54 +37,68 @@ app.get("/add", (req, res) => {
 });
 
 app.post("/add", (req, res) => {
-  https.get(
-    API_ENDPOINT +
-      "api_key=" +
-      API_KEY +
-      "&query=" +
-      req.body.movie +
-      "&include_adult=true",
-    (response) => {
-      response
-        .on("data", (data) => {
-          const movies = JSON.parse(data)["results"];
-          res.render("select", { list: movies, moment: moment });
-        })
-        .on("error", (err) => {
-          console.log(err);
-        });
-    }
-  );
+  axios({
+    method: "GET",
+    url: API_ENDPOINT,
+    headers: {
+      Connection: "keep-alive",
+    },
+
+    params: {
+      include_adult: true,
+      api_key: API_KEY,
+      query: req.body.movie,
+    },
+  })
+    .then((result) => {
+      const movies = result["data"]["results"];
+      res.render("select", { list: movies, moment: moment });
+    })
+    .catch((err) => {
+      res.send(
+        `<h1> oops! some error occurred. <a autofocus href="/add">try again.</a></h1>\n
+         <h2 style="color:red">${err}</h2>`
+      );
+    });
 });
 
 //FIND THE MOVIE
 app.get("/find/:movie_id", (req, res) => {
-  https.get(
-    "https://api.themoviedb.org/3/movie/" +
-      req.params.movie_id +
-      "?api_key=" +
-      API_KEY,
-    (response) => {
-      response.on("data", (data) => {
-        const movie = JSON.parse(data);
+  axios({
+    method: "GET",
+    url: "https://api.themoviedb.org/3/movie/" + req.params.movie_id,
+    headers: {
+      Connection: "keep-alive",
+    },
 
-        const newMovie = new Movie({
-          title: movie.title,
-          year: movie["release_date"],
-          description: movie["overview"],
-          ratin: movie["vote_average"],
-          img_url: `https://image.tmdb.org/t/p/original/${movie["poster_path"]}`,
-        });
-        newMovie.save((err, obj) => {
-          if (err) {
-            console.log(err);
-          } else {
-            res.redirect("/edit/" + movie.title);
-          }
-        });
+    params: {
+      include_adult: true,
+      api_key: API_KEY,
+    },
+  })
+    .then((result) => {
+      const movie = result["data"];
+      const newMovie = new Movie({
+        title: movie.title,
+        year: movie["release_date"],
+        description: movie["overview"],
+        ratin: movie["vote_average"],
+        img_url: `https://image.tmdb.org/t/p/original/${movie["poster_path"]}`,
       });
-    }
-  );
+      newMovie.save((err, obj) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.redirect("/edit/" + movie.title);
+        }
+      });
+    })
+    .catch((err) => {
+      res.send(
+        `<h1> oops! some error occurred. <a autofocus href="/add">try again.</a></h1>\n
+         <h2 style="color:red;">${err}</h2>`
+      );
+    });
 });
 
 // EDIT THE REVIEW
@@ -124,14 +131,16 @@ app.post("/edit/:title", (req, res) => {
 });
 
 //DELETE THE MOVIE
-app.post("/delete/:title", (req, res) => {
+app.get("/delete/:title", (req, res) => {
   Movie.findOneAndDelete({ title: req.params.title }, (err, obj) => {
     if (err) {
       console.log(err);
+    } else {
+      res.redirect("/");
     }
   });
 });
 
 app.listen(PORT, () => {
-  console.log("app listening on port " + PORT + ".");
+  console.log(`app listening on port ${PORT}.`);
 });
