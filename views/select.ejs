@@ -6,7 +6,7 @@
   <% list.forEach(movie => { %>
   <p>
     <a href="/find/<%= movie.id %>">
-      <%= movie.title %> - <%= moment(movie.release_date).format("DD/MM/YYYY")%>
+      <%= movie.title %> - <%= moment(movie.release_date).format("YYYY")%>
     </a>
   </p>
   <% }) %>
