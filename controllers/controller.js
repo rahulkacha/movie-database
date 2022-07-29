@@ -61,7 +61,7 @@ const findGET = (req, res) => {
         title: movie.title,
         year: movie["release_date"],
         description: movie["overview"],
-        ratin: movie["vote_average"],
+        rating: movie["vote_average"],
         img_url: `https://image.tmdb.org/t/p/original/${movie["poster_path"]}`,
       });
       newMovie.save((err, obj) => {
