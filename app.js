@@ -23,7 +23,7 @@ mongoose.set("strictQuery", true);
 // DB_CONNECTION
 mongoose.connect(DB_URL);
 // // ROUTES
-app.use(routes);
+app.use(routes); 
 
 app.listen(PORT, () => {
   console.log(`app listening on port ${PORT}.`);

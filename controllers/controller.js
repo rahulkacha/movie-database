@@ -1,11 +1,12 @@
 const axios = require("axios");
 const Movie = require("../models/movie");
 const moment = require("moment");
+require("dotenv").config();
+
 
 const API_ENDPOINT_1 = "https://api.themoviedb.org/3/search/movie?";
 const API_ENDPOINT_2 = "https://api.themoviedb.org/3/movie/";
 const API_KEY = process.env.API_KEY;
-
 const index = (req, res) => {
   Movie.find({}, (err, movies) => {
     res.render("index", { movies: movies, moment: moment });
@@ -35,6 +36,7 @@ const addPOST = (req, res) => {
       res.render("select", { list: movies, moment: moment });
     })
     .catch((err) => {
+      console.log(err);
       res.send(
         `<h1> oops! some error occurred. <a autofocus href="/add">try again.</a></h1>\n
            <h2 style="color:red">${err}</h2>`
