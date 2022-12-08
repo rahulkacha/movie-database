@@ -16,9 +16,12 @@ const DB_URL =
   process.env.MONGODB_PASSWORD +
   "@cluster0.itvnp8i.mongodb.net/?retryWrites=true&w=majority";
 
+
+// supressed some warning 
+mongoose.set("strictQuery", true);
+
 // DB_CONNECTION
 mongoose.connect(DB_URL);
-
 // // ROUTES
 app.use(routes);
 
